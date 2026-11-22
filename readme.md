@@ -74,7 +74,7 @@ In NVDA's Settings dialog, the "MEB Access" category has:
 * Continue into the next chapter when say all reaches the end, in ePub books (on).
 * Continue to the next page when say all reaches the end of an OCR page (on).
 * Announce bookshelf changes: search results, downloads and sync (on).
-* Remove zero-width spaces from speech (off). Thai ePub books put an invisible zero-width space between most words. Windows' Thai voice ignores them; if your voice pauses at every word, turn this on.
+* Remove the invisible zero-width spaces between Thai words from speech (on). Thai ePub books put a zero-width space (U+200B) between almost every word, so the reader knows where lines may wrap. Some voices read them or pause at each one. This only affects speech while Meb is in front. Braille and the text you copy still contain them.
 * OCR language for image books: Thai and English, Thai, or English.
 
 ## The MEB web store

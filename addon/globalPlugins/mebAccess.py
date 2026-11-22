@@ -60,7 +60,8 @@ config.conf.spec[CONF] = {
 	"continueOcrPages": "boolean(default=True)",
 	"announceShelf": "boolean(default=True)",
 	"ocrLanguage": 'option("tha+eng", "tha", "eng", default="tha+eng")',
-	"stripZeroWidthSpaces": "boolean(default=False)",
+	# Thai ePubs put a zero-width space between words; some voices read or pause on each one.
+	"stripZeroWidthSpaces": "boolean(default=True)",
 }
 
 STORE_SEARCH_URL = "https://www.mebmarket.com/index.php?action=search_book&search="
@@ -909,7 +910,7 @@ class MebSettingsPanel(settingsDialogs.SettingsPanel):
 			# Translators: A setting of the MEB Access add-on.
 			(
 				"stripZeroWidthSpaces",
-				_("Remove &zero-width spaces from speech (try this if Thai text sounds choppy)"),
+				_("Remove the invisible &zero-width spaces between Thai words from speech"),
 			),
 		):
 			box = helper.addItem(wx.CheckBox(self, label=label))
