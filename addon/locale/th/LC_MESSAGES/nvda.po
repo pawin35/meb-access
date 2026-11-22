@@ -1,0 +1,298 @@
+# Thai translation of the MEB Access NVDA add-on.
+# This file is distributed under the same license as the add-on (GNU GPL v2).
+msgid ""
+msgstr ""
+"Project-Id-Version: mebAccess 1.0.0\n"
+"Language: th\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+# Add-on and settings
+
+msgid "MEB Access"
+msgstr "MEB Access"
+
+msgid "Makes the MEB: Mobile E-Books Windows app usable with NVDA. Names Meb's unlabeled buttons, makes the bookshelf a keyboard list, opens books from the keyboard, starts reading at Meb's page, continues reading across chapters and pages, and adds chapter, bookmark and footnote support. Image-only (PDF) books are read with offline Thai OCR."
+msgstr "ทำให้แอป MEB: Mobile E-Books บน Windows ใช้งานกับ NVDA ได้ ตั้งชื่อให้ปุ่มที่ไม่มีชื่อ ทำให้ชั้นหนังสือเป็นรายการที่ใช้แป้นพิมพ์ได้ เปิดหนังสือด้วยแป้นพิมพ์ เริ่มอ่านจากหน้าปัจจุบันของ Meb อ่านต่อเนื่องข้ามบทและหน้า และรองรับสารบัญ บุ๊กมาร์ก และเชิงอรรถ หนังสือแบบภาพ (PDF) อ่านด้วย OCR ภาษาไทยแบบออฟไลน์"
+
+msgid "First release."
+msgstr "รุ่นแรก"
+
+msgid "MEB e-book reader"
+msgstr "โปรแกรมอ่านอีบุ๊ก MEB"
+
+msgid "Announce the &page number when turning pages"
+msgstr "บอกเลข&หน้าเมื่อเปลี่ยนหน้า"
+
+msgid "Continue into the next &chapter when say all reaches the end (ePub)"
+msgstr "อ่านต่อไปยัง&บทถัดไปเมื่ออ่านต่อเนื่องจนจบบท (ePub)"
+
+msgid "Continue to the next page when say all reaches the end of an &OCR page"
+msgstr "อ่านต่อไปยังหน้าถัดไปเมื่ออ่านต่อเนื่องจนจบหน้า &OCR"
+
+msgid "Announce &bookshelf changes (search results, downloads, sync)"
+msgstr "บอกการเปลี่ยนแปลงบน&ชั้นหนังสือ (ผลการค้นหา การดาวน์โหลด การซิงก์)"
+
+msgid "Remove &zero-width spaces from speech (try this if Thai text sounds choppy)"
+msgstr "ลบ&ช่องว่างความกว้างศูนย์ออกจากเสียงพูด (ลองเปิดหากเสียงอ่านภาษาไทยติดขัด)"
+
+msgid "OCR &language for image books:"
+msgstr "&ภาษาสำหรับ OCR หนังสือแบบภาพ:"
+
+msgid "Thai and English"
+msgstr "ไทยและอังกฤษ"
+
+msgid "Thai"
+msgstr "ไทย"
+
+msgid "English"
+msgstr "อังกฤษ"
+
+# Labels of Meb's controls
+
+msgid "Settings"
+msgstr "การตั้งค่า"
+
+msgid "Back"
+msgstr "ย้อนกลับ"
+
+msgid "Search my books"
+msgstr "ค้นหาหนังสือของฉัน"
+
+msgid "Search filter"
+msgstr "ตัวกรองการค้นหา"
+
+msgid "Select all"
+msgstr "เลือกทั้งหมด"
+
+msgid "Stop download"
+msgstr "หยุดดาวน์โหลด"
+
+msgid "Download"
+msgstr "ดาวน์โหลด"
+
+msgid "Minimize"
+msgstr "ย่อหน้าต่าง"
+
+msgid "Maximize"
+msgstr "ขยายหน้าต่าง"
+
+msgid "Close"
+msgstr "ปิด"
+
+msgid "Next page"
+msgstr "หน้าถัดไป"
+
+msgid "Previous page"
+msgstr "หน้าก่อนหน้า"
+
+msgid "Media"
+msgstr "สื่อ"
+
+msgid "Zoom"
+msgstr "ซูม"
+
+msgid "Decrease"
+msgstr "ลด"
+
+msgid "Increase"
+msgstr "เพิ่ม"
+
+msgid "Sort by"
+msgstr "เรียงตาม"
+
+msgid "Cover style"
+msgstr "รูปแบบปก"
+
+msgid "Theme"
+msgstr "ธีม"
+
+msgid "Reading mode"
+msgstr "โหมดการอ่าน"
+
+msgid "Page layout"
+msgstr "การแสดงหน้า"
+
+msgid "Fit"
+msgstr "การปรับขนาด"
+
+msgid "Font"
+msgstr "ฟอนต์"
+
+msgid "Font size"
+msgstr "ขนาดฟอนต์"
+
+msgid "Zoom out"
+msgstr "ซูมออก"
+
+msgid "Zoom in"
+msgstr "ซูมเข้า"
+
+msgid "Rename bookmark"
+msgstr "เปลี่ยนชื่อบุ๊กมาร์ก"
+
+msgid "Delete bookmark"
+msgstr "ลบบุ๊กมาร์ก"
+
+# Bookshelf
+
+msgid "not downloaded"
+msgstr "ยังไม่ได้ดาวน์โหลด"
+
+msgid "downloading"
+msgstr "กำลังดาวน์โหลด"
+
+msgid "waiting to download"
+msgstr "รอดาวน์โหลด"
+
+msgid "Open the focused book"
+msgstr "เปิดหนังสือที่โฟกัสอยู่"
+
+msgid "Open the focused book's menu (mark as finished, share, redownload...)"
+msgstr "เปิดเมนูของหนังสือที่โฟกัสอยู่ (อ่านจบแล้ว แชร์ รีดาวน์โหลด...)"
+
+msgid "Book cover is not visible"
+msgstr "มองไม่เห็นปกหนังสือ"
+
+msgid "Next book"
+msgstr "หนังสือเล่มถัดไป"
+
+msgid "Previous book"
+msgstr "หนังสือเล่มก่อนหน้า"
+
+msgid "First book"
+msgstr "หนังสือเล่มแรก"
+
+msgid "Last book"
+msgstr "หนังสือเล่มสุดท้าย"
+
+msgid "Sync finished"
+msgstr "ซิงก์เสร็จแล้ว"
+
+msgid "Meb found books you may have finished"
+msgstr "Meb พบหนังสือที่คุณอาจอ่านจบแล้ว"
+
+msgid "Downloading {title}"
+msgstr "กำลังดาวน์โหลด {title}"
+
+msgid "{title} downloaded"
+msgstr "ดาวน์โหลด {title} เสร็จแล้ว"
+
+msgid "Go to a shelf section: 1 bookshelf, 2 collections, 3 My Cloud, 4 news feed, 5 notifications"
+msgstr "ไปยังเมนูด้านข้าง: 1 ชั้นหนังสือ, 2 คอลเลกชัน, 3 มายคลาวด์, 4 ฟีดข่าว, 5 การแจ้งเตือน"
+
+msgid "Search the MEB store (opens the results in your web browser)"
+msgstr "ค้นหาในร้านหนังสือ MEB (เปิดผลการค้นหาในเว็บเบราว์เซอร์)"
+
+msgid "Search the MEB store"
+msgstr "ค้นหาในร้านหนังสือ MEB"
+
+msgid "Search the MEB store for:"
+msgstr "ค้นหาในร้านหนังสือ MEB:"
+
+# Reader
+
+msgid "Next page (in ePub text: move to the next page; in an OCR result: next page and recognize it)"
+msgstr "หน้าถัดไป (ในเนื้อหา ePub: ไปยังหน้าถัดไป ในผลลัพธ์ OCR: ไปหน้าถัดไปและอ่านภาพเป็นข้อความ)"
+
+msgid "Previous page (in ePub text: move to the previous page; in an OCR result: previous page and recognize it)"
+msgstr "หน้าก่อนหน้า (ในเนื้อหา ePub: ไปยังหน้าก่อนหน้า ในผลลัพธ์ OCR: ไปหน้าก่อนหน้าและอ่านภาพเป็นข้อความ)"
+
+msgid "ePub: go to the next chapter and start reading it"
+msgstr "ePub: ไปบทถัดไปและเริ่มอ่าน"
+
+msgid "ePub: go to the previous chapter and start reading it"
+msgstr "ePub: ไปบทก่อนหน้าและเริ่มอ่าน"
+
+msgid "No next chapter"
+msgstr "ไม่มีบทถัดไป"
+
+msgid "No previous chapter"
+msgstr "ไม่มีบทก่อนหน้า"
+
+msgid "Read the book from Meb's current page: move into the ePub text, or OCR the page of an image book"
+msgstr "อ่านหนังสือจากหน้าปัจจุบันของ Meb: เข้าไปยังเนื้อหา ePub หรืออ่านหน้าหนังสือแบบภาพด้วย OCR"
+
+msgid "Report the chapter and page"
+msgstr "บอกบทและหน้าปัจจุบัน"
+
+msgid "No text found on this page"
+msgstr "ไม่พบข้อความในหน้านี้"
+
+msgid "Reading image books needs an OCR engine, which isn't installed yet. Download it now? It's about {size} MB, downloaded once from GitHub: the Tesseract engine with Thai and English data."
+msgstr "การอ่านหนังสือแบบภาพต้องใช้เครื่องมือ OCR ซึ่งยังไม่ได้ติดตั้ง ต้องการดาวน์โหลดตอนนี้หรือไม่ ขนาดประมาณ {size} MB ดาวน์โหลดครั้งเดียวจาก GitHub ประกอบด้วยเครื่องมือ Tesseract พร้อมข้อมูลภาษาไทยและภาษาอังกฤษ"
+
+msgid "MEB Access: OCR engine"
+msgstr "MEB Access: เครื่องมือ OCR"
+
+msgid "&Download"
+msgstr "&ดาวน์โหลด"
+
+msgid "Downloading the OCR engine"
+msgstr "กำลังดาวน์โหลดเครื่องมือ OCR"
+
+msgid "The OCR engine is still downloading"
+msgstr "ยังดาวน์โหลดเครื่องมือ OCR ไม่เสร็จ"
+
+msgid "Couldn't download the OCR engine: {error}"
+msgstr "ดาวน์โหลดเครื่องมือ OCR ไม่สำเร็จ: {error}"
+
+msgid "OCR engine installed. Press Alt+T to read the page."
+msgstr "ติดตั้งเครื่องมือ OCR แล้ว กด Alt+T เพื่ออ่านหน้า"
+
+# Chapters and bookmarks
+
+msgid "Show the chapter list"
+msgstr "แสดงรายการบท"
+
+msgid "Chapters"
+msgstr "สารบัญ"
+
+msgid "&Chapters:"
+msgstr "&บท:"
+
+msgid "&Go to"
+msgstr "&ไปที่"
+
+msgid "&Delete"
+msgstr "&ลบ"
+
+msgid "&Close"
+msgstr "&ปิด"
+
+msgid "Meb did not open the list"
+msgstr "Meb ไม่ได้เปิดรายการ"
+
+msgid "Add a bookmark at the current page"
+msgstr "เพิ่มบุ๊กมาร์กที่หน้าปัจจุบัน"
+
+msgid "Bookmark added"
+msgstr "เพิ่มบุ๊กมาร์กแล้ว"
+
+msgid "Show bookmarks"
+msgstr "แสดงบุ๊กมาร์ก"
+
+msgid "Bookmarks"
+msgstr "บุ๊กมาร์ก"
+
+msgid "&Bookmarks:"
+msgstr "&บุ๊กมาร์ก:"
+
+msgid "No bookmarks"
+msgstr "ไม่มีบุ๊กมาร์ก"
+
+msgid "Delete bookmark {name}?"
+msgstr "ลบบุ๊กมาร์ก {name} หรือไม่"
+
+msgid "Bookmark deleted"
+msgstr "ลบบุ๊กมาร์กแล้ว"
+
+# Diagnostics
+
+msgid "Copy diagnostic information about the focused control, for bug reports"
+msgstr "คัดลอกข้อมูลวินิจฉัยของตัวควบคุมที่โฟกัสอยู่ สำหรับรายงานปัญหา"
+
+msgid "Diagnostic information copied to the clipboard. It may contain book titles."
+msgstr "คัดลอกข้อมูลวินิจฉัยไปยังคลิปบอร์ดแล้ว ข้อมูลนี้อาจมีชื่อหนังสือ"
