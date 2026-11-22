@@ -7,7 +7,7 @@ Requires NVDA 2026.1 or later. Tested with Meb 2.0.50 and NVDA 2026.3.
 * Names Meb's unlabeled buttons, in English or Thai depending on NVDA's language.
 * Bookshelf: each book is one list item with its title, download status and reading progress. Move with the arrow keys, open with Enter, and use the Applications key for Meb's book menu. Alt+1 to Alt+5 go to the side menu sections.
 * Announces search results, downloads, sync and Meb's "finished books" banner.
-* Removes the invisible zero-width spaces that Thai books put between words from speech, so voices don't read or pause on them.
+* Hides the invisible zero-width spaces that Thai books put between words. They're left out of speech, braille and copied text, and skipped when moving by character or word, so voices don't pause on them and the cursor doesn't stop on them.
 * ePub books: Alt+T starts reading at Meb's current page. Say all continues into the next chapter. Page Down and Page Up follow Meb's pages, and Control+Page Down and Control+Page Up change chapter.
 * Chapter list (Alt+C), bookmarks (Alt+B to add, Alt+Shift+B to list, go to or delete), and footnotes read aloud.
 * Image (PDF) books: offline Thai and English OCR with Tesseract (Alt+T). Say all continues to the next page, and recognized pages are remembered. The OCR engine is offered as a one-time download if it isn't installed.

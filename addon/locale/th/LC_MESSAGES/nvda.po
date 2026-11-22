@@ -35,8 +35,8 @@ msgstr "อ่านต่อไปยังหน้าถัดไปเมื
 msgid "Announce &bookshelf changes (search results, downloads, sync)"
 msgstr "บอกการเปลี่ยนแปลงบน&ชั้นหนังสือ (ผลการค้นหา การดาวน์โหลด การซิงก์)"
 
-msgid "Remove the invisible &zero-width spaces between Thai words from speech"
-msgstr "ลบ&ช่องว่างความกว้างศูนย์ที่มองไม่เห็นระหว่างคำภาษาไทยออกจากเสียงพูด"
+msgid "Hide the invisible &zero-width spaces between Thai words (speech, braille, cursor, copying)"
+msgstr "ซ่อน&ช่องว่างความกว้างศูนย์ที่มองไม่เห็นระหว่างคำภาษาไทย (เสียงพูด อักษรเบรลล์ เคอร์เซอร์ การคัดลอก)"
 
 msgid "OCR &language for image books:"
 msgstr "&ภาษาสำหรับ OCR หนังสือแบบภาพ:"

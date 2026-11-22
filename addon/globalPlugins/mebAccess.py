@@ -21,6 +21,7 @@ from ctypes import wintypes
 
 import addonHandler
 import api
+import appModuleHandler
 import buildVersion
 import config
 import controlTypes
@@ -32,6 +33,7 @@ import gui
 import mouseHandler
 import speech
 import textInfos
+import textUtils
 import ui
 import UIAHandler
 import winUser
@@ -43,10 +45,12 @@ from gui import guiHelper, settingsDialogs
 from gui.message import MessageDialog, ReturnCode
 from logHandler import log
 from NVDAObjects.behaviors import Dialog
+from NVDAObjects.IAccessible import IAccessible
 from NVDAObjects.UIA import UIA
 from scriptHandler import script
 from speech import sayAll
 from speech.extensions import filter_speechSequence
+from virtualBuffers import VirtualBuffer
 
 try:
 	addonHandler.initTranslation()
@@ -317,6 +321,70 @@ def textPoint(rect, host):
 
 def stripZwsp(sequence):
 	return [item.replace(ZWSP, "") if isinstance(item, str) else item for item in sequence]
+
+
+def rawIndex(raw, hiddenIndex):
+	"""Index in raw of the character at hiddenIndex in raw with its zero-width spaces removed."""
+	seen = 0
+	for i, char in enumerate(raw):
+		if char == ZWSP:
+			continue
+		if seen == hiddenIndex:
+			return i
+		seen += 1
+	return len(raw)
+
+
+class ZwspHidingTextInfo(textInfos.TextInfo):
+	"""Browse mode text of Meb's ePub reading pane with the zero-width spaces between Thai words hidden.
+	They stay in the document, so offsets (and with them the caret, braille routing and find) still match
+	it, but they are left out of the text given to speech, braille and the clipboard, and each one belongs
+	to the character or word before it, so cursor movement never stops on one.
+	Mixed in front of the real browse mode TextInfo class (see _zwspHidingBuffer)."""
+
+	def _hiding(self):
+		return _conf("stripZeroWidthSpaces")
+
+	def _absorbZwsp(self, start, end, unitOffsets):
+		while 0 < start < end and not self._getTextRange(start, end).replace(ZWSP, ""):
+			start = unitOffsets(start - 1)[0]  # a unit of only zero-width spaces joins the unit before it
+		storyLength = self._getStoryLength()
+		while end < storyLength and self._getTextRange(end, end + 1) == ZWSP:
+			end += 1
+		return start, end
+
+	def _getCharacterOffsets(self, offset):
+		start, end = super()._getCharacterOffsets(offset)
+		return self._absorbZwsp(start, end, super()._getCharacterOffsets) if self._hiding() else (start, end)
+
+	def _getWordOffsets(self, offset):
+		start, end = super()._getWordOffsets(offset)
+		return self._absorbZwsp(start, end, super()._getWordOffsets) if self._hiding() else (start, end)
+
+	def _get_text(self):
+		text = super()._get_text()
+		return text.replace(ZWSP, "") if self._hiding() else text
+
+	def getTextWithFields(self, formatConfig=None):
+		fields = super().getTextWithFields(formatConfig)
+		if not self._hiding():
+			return fields
+		if isinstance(fields, str):  # virtual buffers return "" for an empty range
+			return fields.replace(ZWSP, "")
+		return [item.replace(ZWSP, "") if isinstance(item, str) else item for item in fields]
+
+	def moveToCodepointOffset(self, codepointOffset):
+		# Braille maps a cell back to text by counting code points in the (hidden) text; count them in
+		# the raw text instead, or routing would drift by one cell per zero-width space.
+		if not self._hiding():
+			return super().moveToCodepointOffset(codepointOffset)
+		raw = self._getTextRange(self._startOffset, self._endOffset)
+		converter = textUtils.getOffsetConverter(self.encoding)(raw)
+		result = self.copy()
+		result._startOffset = result._endOffset = self._startOffset + converter.strToEncodedOffsets(
+			rawIndex(raw, codepointOffset),
+		)
+		return result
 
 
 def ocrLangs():
@@ -599,6 +667,27 @@ def _isMeb(obj):
 	return getattr(getattr(obj, "appModule", None), "appName", None) == "meb"
 
 
+def _inMebWindow(hwnd):
+	"""Whether hwnd sits inside Meb's window. Meb's ePub text is a WebView2 page whose objects belong to
+	msedgewebview2.exe, so their own app module isn't Meb's."""
+	try:
+		root = winUser.getAncestor(hwnd, winUser.GA_ROOT)
+		return appModuleHandler.getAppNameFromProcessID(winUser.getWindowThreadProcessID(root)[0]) == "meb"
+	except Exception:  # runs while NVDA creates objects in every app: must never raise
+		return False
+
+
+_hidingBuffers = {}
+
+
+def _zwspHidingBuffer(base):
+	"""Subclass of the browse mode class base whose TextInfo hides zero-width spaces."""
+	if base not in _hidingBuffers:
+		textInfo = type(f"MebAccess{base.TextInfo.__name__}", (ZwspHidingTextInfo, base.TextInfo), {})
+		_hidingBuffers[base] = type(f"MebAccess{base.__name__}", (base,), {"TextInfo": textInfo})
+	return _hidingBuffers[base]
+
+
 def _caretAtEnd(obj):
 	"""Whether only blank text follows the caret's line in obj (a browse mode document or an OCR result).
 	Chapters often end in whitespace-only nodes that say all doesn't stop on."""
@@ -667,6 +756,14 @@ class MebListItem(UIA):
 			return _itemText(self.UIAElement) or super()._get_name()
 		except COMError:
 			return super()._get_name()
+
+
+class MebEpubDocument(IAccessible):
+	"""Meb's ePub reading pane (a Chromium document in WebView2): browse mode with zero-width spaces hidden."""
+
+	def _get_treeInterceptorClass(self):
+		cls = super()._get_treeInterceptorClass()
+		return _zwspHidingBuffer(cls) if isinstance(cls, type) and issubclass(cls, VirtualBuffer) else cls
 
 
 class MebDialog(Dialog):
@@ -910,7 +1007,9 @@ class MebSettingsPanel(settingsDialogs.SettingsPanel):
 			# Translators: A setting of the MEB Access add-on.
 			(
 				"stripZeroWidthSpaces",
-				_("Remove the invisible &zero-width spaces between Thai words from speech"),
+				_(
+					"Hide the invisible &zero-width spaces between Thai words (speech, braille, cursor, copying)",
+				),
 			),
 		):
 			box = helper.addItem(wx.CheckBox(self, label=label))
@@ -964,6 +1063,14 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		super().terminate()
 
 	def chooseNVDAObjectOverlayClasses(self, obj, clsList):
+		if (
+			isinstance(obj, IAccessible)
+			and obj.windowClassName == "Chrome_RenderWidgetHostHWND"
+			and obj.role == controlTypes.Role.DOCUMENT
+			and _inMebWindow(obj.windowHandle)
+		):
+			clsList.insert(0, MebEpubDocument)
+			return
 		if not (isinstance(obj, UIA) and _isMeb(obj)):
 			return
 		role = obj.role

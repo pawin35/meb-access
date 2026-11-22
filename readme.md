@@ -74,7 +74,7 @@ In NVDA's Settings dialog, the "MEB Access" category has:
 * Continue into the next chapter when say all reaches the end, in ePub books (on).
 * Continue to the next page when say all reaches the end of an OCR page (on).
 * Announce bookshelf changes: search results, downloads and sync (on).
-* Remove the invisible zero-width spaces between Thai words from speech (on). Thai ePub books put a zero-width space (U+200B) between almost every word, so the reader knows where lines may wrap. Some voices read them or pause at each one. This only affects speech while Meb is in front. Braille and the text you copy still contain them.
+* Hide the invisible zero-width spaces between Thai words (on). Thai ePub books put a zero-width space (U+200B) between almost every word, so the reader knows where lines may wrap. Without this setting, some voices read them or pause at each one, braille shows them, moving by character stops on each one silently, and copied text contains them. With it, they are hidden in Meb's reading pane: left out of speech, braille and copied text, and skipped when you move by character or word. The text itself is unchanged, so the cursor, braille routing keys and selection still line up with the book. Searching with NVDA's Find command still sees them, so search for single words.
 * OCR language for image books: Thai and English, Thai, or English.
 
 ## The MEB web store

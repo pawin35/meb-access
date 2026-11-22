@@ -26,11 +26,23 @@ from PIL import Image, ImageDraw, ImageFont
 sys.dont_write_bytecode = True
 
 for name in (
-    "api", "buildVersion", "config", "controlTypes", "core", "eventHandler", "logHandler", "mouseHandler",
-    "textInfos", "ui", "UIAHandler", "winUser", "winVersion", "speech", "speech.extensions", "NVDAObjects",
+    "api", "appModuleHandler", "buildVersion", "config", "controlTypes", "core", "eventHandler", "logHandler",
+    "mouseHandler", "ui", "UIAHandler", "winUser", "winVersion", "speech", "speech.extensions", "NVDAObjects",
 ):
 	sys.modules[name] = mock.MagicMock()
 cls = lambda name: type(name, (), {})  # real classes where the add-on subclasses them
+sys.modules["textInfos"] = mock.MagicMock(TextInfo=cls("TextInfo"))
+sys.modules["NVDAObjects.IAccessible"] = mock.MagicMock(IAccessible=cls("IAccessible"))
+sys.modules["virtualBuffers"] = mock.MagicMock(VirtualBuffer=cls("VirtualBuffer"))
+
+class CodepointConverter:  # textUtils' converter for text whose code points are one offset each (all of Thai)
+	def __init__(self, text):
+		self.text = text
+
+	def strToEncodedOffsets(self, start, end=None):
+		return start if end is None else (start, end)
+
+sys.modules["textUtils"] = mock.MagicMock(getOffsetConverter=lambda encoding: CodepointConverter)
 sys.modules["addonHandler"] = mock.MagicMock(AddonError=type("AddonError", (Exception,), {}))
 sys.modules["globalVars"] = mock.MagicMock(**{"appArgs.secure": False})
 sys.modules["globalPluginHandler"] = mock.MagicMock(GlobalPlugin=cls("GlobalPlugin"))
@@ -138,9 +150,87 @@ m.globalVars.appArgs.secure = True
 assert m._disabledInSecureMode(m.GlobalPlugin) is base
 m.globalVars.appArgs.secure = False
 
-# Zero-width spaces (3,833 in one chapter of the sample) leave speech only when the user opts in.
+# Zero-width spaces (3,833 in one chapter of the sample) are filtered out of speech...
 Z = chr(0x200B)
 assert m.stripZwsp([f"เหนือ{Z}ท้องฟ้า", 42, f"{Z}ทิศ"]) == ["เหนือท้องฟ้า", 42, "ทิศ"]
+
+# ...and hidden in the reading pane's browse mode text. FakeVBufText stands in for NVDA's virtual buffer
+# TextInfo over a real line from a Meb book: one offset per code point, words split at zero-width spaces
+# (as NVDA's word segmenter does), each zero-width space its own "word".
+line = f"ที่{Z}ซีเลมี{Z}ร้าน{Z}มังกร{Z}สอง{Z}ร้าน"
+zwsps = [i for i, c in enumerate(line) if c == Z]
+
+class FakeVBufText(sys.modules["textInfos"].TextInfo):
+	encoding = "utf_32_le"
+
+	def __init__(self, start=0, end=len(line)):
+		self._startOffset, self._endOffset = start, end
+
+	def copy(self):
+		return type(self)(self._startOffset, self._endOffset)
+
+	def _getTextRange(self, start, end):
+		return line[start:end]
+
+	def _getStoryLength(self):
+		return len(line)
+
+	def _getCharacterOffsets(self, offset):
+		return offset, offset + 1
+
+	def _getWordOffsets(self, offset):
+		if line[offset] == Z:
+			return offset, offset + 1
+		start = max([z + 1 for z in zwsps if z < offset] + [0])
+		return start, min([z for z in zwsps if z > offset] + [len(line)])
+
+	def _get_text(self):
+		return line[self._startOffset:self._endOffset]
+
+	def getTextWithFields(self, formatConfig=None):
+		return ["field", self._get_text()] if self._startOffset < self._endOffset else ""
+
+	def moveToCodepointOffset(self, codepointOffset):
+		result = self.copy()
+		result._startOffset = result._endOffset = self._startOffset + codepointOffset
+		return result
+
+class HiddenText(m.ZwspHidingTextInfo, FakeVBufText):
+	pass
+
+hidden = HiddenText()
+assert hidden._get_text() == line.replace(Z, "") and hidden.getTextWithFields() == ["field", line.replace(Z, "")]
+assert HiddenText(3, 3).getTextWithFields() == ""
+# A zero-width space belongs to the character (and word) before it, so moving never lands on one.
+first = zwsps[0]
+assert hidden._getCharacterOffsets(first - 1) == (first - 1, first + 1)
+assert hidden._getCharacterOffsets(first) == (first - 1, first + 1)
+assert hidden._getWordOffsets(0) == (0, first + 1) and hidden._getWordOffsets(first) == (0, first + 1)
+stops, pos = [], 0
+while pos < len(line):
+	stops.append(pos)
+	pos = hidden._getCharacterOffsets(pos)[1]
+assert not set(stops) & set(zwsps) and len(stops) == len(line.replace(Z, ""))
+back, pos = [], len(line)
+while pos > 0:
+	pos = hidden._getCharacterOffsets(pos - 1)[0]
+	back.append(pos)
+assert sorted(back) == stops
+# Braille routing: the 4th hidden character (ซ, after "ที่") is at raw offset 4, past the zero-width space.
+assert m.rawIndex(line, 3) == 4 and m.rawIndex(line, len(line.replace(Z, ""))) == len(line)
+assert hidden.moveToCodepointOffset(3)._startOffset == 4
+assert HiddenText(4).moveToCodepointOffset(6)._startOffset == line.index("ร้าน")
+# With the setting off, the text is left exactly as the book has it.
+realConf, m._conf = m._conf, lambda key: False
+assert hidden._get_text() == line and hidden._getCharacterOffsets(first) == (first, first + 1)
+assert hidden.moveToCodepointOffset(4)._startOffset == 4
+m._conf = realConf
+# The reading pane swaps in the hiding text class only for virtual buffers.
+VBuf = sys.modules["virtualBuffers"].VirtualBuffer
+ChromeVBuf = type("ChromeVBuf", (VBuf,), {"TextInfo": FakeVBufText})
+swapped = m._zwspHidingBuffer(ChromeVBuf)
+assert issubclass(swapped, ChromeVBuf) and issubclass(swapped.TextInfo, m.ZwspHidingTextInfo)
+assert issubclass(swapped.TextInfo, FakeVBufText) and m._zwspHidingBuffer(ChromeVBuf) is swapped
 
 # Visible page among FlipView's previous/current/next images.
 assert m.pickPage([(-1900, 52, -100, 1100), (300, 52, 1600, 1100), (2000, 52, 3800, 1100)], (0, 0, 1920, 1130)) == 1
