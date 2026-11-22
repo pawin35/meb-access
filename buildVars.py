@@ -27,10 +27,13 @@ addon_info = AddonInfo(
 		"Image-only (PDF) books are read with offline Thai OCR.",
 	),
 	# version
-	addon_version="1.0.0",
+	addon_version="1.1.0",
 	# Brief changelog for this version
 	# Translators: what's new content for the add-on version to be shown in the add-on store
-	addon_changelog=_("First release."),
+	addon_changelog=_(
+		"Hides the invisible zero-width spaces that Thai books put between words in Meb's reading pane. "
+		"They are left out of speech, braille and copied text, and the cursor no longer stops on them.",
+	),
 	# Author(s)
 	addon_author="pawin35",
 	# URL for the add-on documentation support

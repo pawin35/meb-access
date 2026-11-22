@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the add-on (GNU GPL v2).
 msgid ""
 msgstr ""
-"Project-Id-Version: mebAccess 1.0.0\n"
+"Project-Id-Version: mebAccess 1.1.0\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -17,8 +17,8 @@ msgstr "MEB Access"
 msgid "Makes the MEB: Mobile E-Books Windows app usable with NVDA. Names Meb's unlabeled buttons, makes the bookshelf a keyboard list, opens books from the keyboard, starts reading at Meb's page, continues reading across chapters and pages, and adds chapter, bookmark and footnote support. Image-only (PDF) books are read with offline Thai OCR."
 msgstr "ทำให้แอป MEB: Mobile E-Books บน Windows ใช้งานกับ NVDA ได้ ตั้งชื่อให้ปุ่มที่ไม่มีชื่อ ทำให้ชั้นหนังสือเป็นรายการที่ใช้แป้นพิมพ์ได้ เปิดหนังสือด้วยแป้นพิมพ์ เริ่มอ่านจากหน้าปัจจุบันของ Meb อ่านต่อเนื่องข้ามบทและหน้า และรองรับสารบัญ บุ๊กมาร์ก และเชิงอรรถ หนังสือแบบภาพ (PDF) อ่านด้วย OCR ภาษาไทยแบบออฟไลน์"
 
-msgid "First release."
-msgstr "รุ่นแรก"
+msgid "Hides the invisible zero-width spaces that Thai books put between words in Meb's reading pane. They are left out of speech, braille and copied text, and the cursor no longer stops on them."
+msgstr "ซ่อนช่องว่างความกว้างศูนย์ที่มองไม่เห็นซึ่งหนังสือภาษาไทยใส่ไว้ระหว่างคำในหน้าอ่านของ Meb โดยไม่อ่านออกเสียง ไม่แสดงในอักษรเบรลล์ ไม่ติดไปกับข้อความที่คัดลอก และเคอร์เซอร์ไม่หยุดที่ช่องว่างเหล่านี้อีก"
 
 msgid "MEB e-book reader"
 msgstr "โปรแกรมอ่านอีบุ๊ก MEB"
